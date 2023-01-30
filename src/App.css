@@ -36,3 +36,26 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+
+.svg-scaling-container {
+  position: relative; 
+  height: 80vh; 
+  width: 80vh; 
+  padding: 0;
+  padding-bottom: 100%; 
+  /* override this inline for aspect ratio other than square */
+}
+
+.svg-scaling-container > svg {
+  position: absolute; 
+/*  
+  height: 100%; 
+  width: 100%; 
+*/
+  left: 0; 
+  top: 0;
+  background-color: blanchedalmond;  
+}
