@@ -14,6 +14,9 @@ let accentColor = hslToHex(160, 0, 45);
 let maxLives = 3;
 let currentLives = maxLives - 1;
 
+let zoomFactor =  window.innerHeight / window.devicePixelRatio / 600;
+console.log('zoom: ', zoomFactor)
+
 // App with width and height of the page
 const app = new Application({
     width: window.innerWidth,
@@ -26,9 +29,9 @@ document.body.appendChild(app.view) // Create Canvas tag in the body
 // Create the sprite and add it to the stage
 let sprite = Sprite.from('assets/logo.svg');
 sprite.resolution = 600;
-sprite.scale.set(0.6, 0.6);
-sprite.x = 10;
-sprite.y = 10;
+sprite.scale.set(0.6 * zoomFactor, 0.6 * zoomFactor);
+sprite.x = 10 * zoomFactor;
+sprite.y = 10 * zoomFactor;
 app.stage.addChild(sprite);
 
 // Add a ticker callback to move the sprite back and forth
@@ -42,12 +45,12 @@ sprite.x = 100.0 + Math.cos(elapsed/50.0) * 100.0;
 
 // Create the sprite and add it to the stage
 let ball = Sprite.from('assets/White_pog.svg');
-ball.radius = 12;
+ball.radius = 12 * zoomFactor;
 ball.width = 2 * ball.radius;
 ball.height = 2 * ball.radius;
 ball.x = window.innerWidth / window.devicePixelRatio / 2 - ball.radius;
 ball.y = window.innerHeight / window.devicePixelRatio - 5 * ball.radius;
-ball.speed = 2.5;
+ball.speed = 6 * zoomFactor;
 ball.direction = 25;
 app.stage.addChild(ball);
 app.ticker.add((delta) => {
@@ -76,7 +79,7 @@ function addBricks(rowCount, columnCount) {
     let graphics = new Graphics();
     graphics.lineStyle(2, parseInt(accentColor.substring(1), 16), 1);
     graphics.beginFill(0xFFFFFF);
-    graphics.drawRect(200, 50, window.innerWidth / window.devicePixelRatio / columnCount - 4, 20);
+    graphics.drawRect(200, 50, window.innerWidth / window.devicePixelRatio / columnCount - 4, 20 * zoomFactor);
     graphics.endFill();
 
     let texture = app.renderer.generateTexture(graphics);
@@ -89,7 +92,7 @@ function addBricks(rowCount, columnCount) {
             let sp = new Sprite(texture);
              
             sp.x = columnCount / 2 + colIdx * (graphics.width + 1);
-            sp.y = 60 + rowIdx * (graphics.height + 2);
+            sp.y = 60 * zoomFactor + rowIdx * (graphics.height + 2);
             sp.density = rowCount - rowIdx;
             updateTintByDensity(sp, rowCount);
             
@@ -108,10 +111,10 @@ function addLives(count){
     let lives = new Array(count);
     for (let livesIdx = 0; livesIdx < lives.length; livesIdx++) {
         let sp = new Sprite(texture);
-        sp.width = 15;
-        sp.height = 15;
-        sp.x = window.innerWidth / window.devicePixelRatio - 30 - livesIdx * 20
-        sp.y = 10;
+        sp.width = 15 * zoomFactor;
+        sp.height = 15 * zoomFactor;
+        sp.x = window.innerWidth / window.devicePixelRatio - 30 * zoomFactor - livesIdx * 20 * zoomFactor;
+        sp.y = 10 * zoomFactor;
         sp.tint = hslToHexNumeric(0, 90, 50);
 
         lives[livesIdx] = sp;
