@@ -1,44 +1,47 @@
 {
-  "homepage": "http://gylhrvth.github.io/pong-game",
   "name": "pong-game",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "webpack-dev-server --config webpack.config.dev.js",
+    "build": "webpack --mode development --config webpack.config.dev.js",
+    "production": "webpack --mode production --config webpack.config.prod.js"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gylhrvth/pong-game.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gylhrvth/pong-game/issues"
+  },
+  "homepage": "https://github.com/gylhrvth/pong-game#readme",
+  "dependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "@pixi/app": "^7.1.1",
+    "@pixi/constants": "^7.1.1",
+    "@pixi/core": "^7.1.1",
+    "@pixi/display": "^7.1.1",
+    "@pixi/graphics": "^7.1.1",
+    "@pixi/math": "^7.1.1",
+    "@pixi/runner": "^7.1.1",
+    "@pixi/settings": "^7.1.1",
+    "@pixi/sprite": "^7.1.1",
+    "@pixi/ticker": "^7.1.1",
+    "@pixi/utils": "^7.1.1",
+    "babel-loader": "^9.1.2",
+    "copy-webpack-plugin": "^11.0.0",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
   },
   "devDependencies": {
-    "gh-pages": "^5.0.0"
+    "css-loader": "^6.7.3",
+    "style-loader": "^3.3.1"
   }
 }
