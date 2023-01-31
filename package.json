@@ -1,24 +1,26 @@
 {
-  "name": "pong-game",
+  "name": "brick-breaker",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    "predeploy": "npm run production",
+    "deploy": "gh-pages -d dist",
     "start": "webpack-dev-server --config webpack.config.dev.js",
     "build": "webpack --mode development --config webpack.config.dev.js",
     "production": "webpack --mode production --config webpack.config.prod.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gylhrvth/pong-game.git"
+    "url": "git+https://github.com/gylhrvth/brick-breaker.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gylhrvth/pong-game/issues"
+    "url": "https://github.com/gylhrvth/brick-breaker/issues"
   },
-  "homepage": "https://github.com/gylhrvth/pong-game#readme",
+  "homepage": "https://github.com/gylhrvth/brick-breaker#readme",
   "dependencies": {
     "@babel/core": "^7.20.12",
     "@babel/preset-env": "^7.20.2",
