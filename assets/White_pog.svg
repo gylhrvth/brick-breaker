@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="64"
+   height="64"
+   id="svg4234">
+  <defs
+     id="defs4236">
+    <radialGradient
+       cx="0.5"
+       cy="0.5"
+       r="0.5"
+       fx="0.25"
+       fy="0.25"
+       id="Shiny">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1"
+         offset="0"
+         id="stop4239" />
+      <stop
+         style="stop-color:#eaeaea;stop-opacity:1"
+         offset="0.5"
+         id="stop4241" />
+      <stop
+         style="stop-color:#dddddd;stop-opacity:1"
+         offset="0.85000002"
+         id="stop4243" />
+      <stop
+         style="stop-color:#515151;stop-opacity:1"
+         offset="1"
+         id="stop4245" />
+    </radialGradient>
+  </defs>
+  <circle
+     cx="32"
+     cy="32"
+     r="30"
+     style="fill:url(#Shiny)"
+     id="circle4247" />
+</svg>
