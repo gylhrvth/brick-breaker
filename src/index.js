@@ -10,6 +10,7 @@ import { Graphics } from '@pixi/graphics'
 let primaryColor = hslToHex(160, 80, 90);
 let secondaryColor = hslToHex(250, 80, 40);
 let accentColor = hslToHex(160, 0, 45);
+let accentColor2 = hslToHex(160, 0, 60);
 
 let maxLives = 3;
 let currentLives = maxLives - 1;
@@ -26,6 +27,8 @@ const app = new Application({
 })
 document.body.appendChild(app.view) // Create Canvas tag in the body
 
+   
+
 // Create the sprite and add it to the stage
 let sprite = Sprite.from('assets/logo.svg');
 sprite.resolution = 600;
@@ -33,15 +36,6 @@ sprite.scale.set(0.6 * zoomFactor, 0.6 * zoomFactor);
 sprite.x = 10 * zoomFactor;
 sprite.y = 10 * zoomFactor;
 app.stage.addChild(sprite);
-
-// Add a ticker callback to move the sprite back and forth
-/*
-let elapsed = 0.0;
-app.ticker.add((delta) => {
-elapsed += delta;
-sprite.x = 100.0 + Math.cos(elapsed/50.0) * 100.0;
-});
-*/
 
 // Create the sprite and add it to the stage
 let ball = Sprite.from('assets/White_pog.svg');
@@ -54,14 +48,14 @@ ball.speed = 6 * zoomFactor;
 ball.direction = 25;
 app.stage.addChild(ball);
 app.ticker.add((delta) => {
-    ball.x += ball.speed * Math.sin(Math.PI * (180 - ball.direction) / 180);
-    ball.y += ball.speed * Math.cos(Math.PI * (180 - ball.direction) / 180);
+    ball.x += delta * ball.speed * Math.sin(Math.PI * (180 - ball.direction) / 180);
+    ball.y += delta * ball.speed * Math.cos(Math.PI * (180 - ball.direction) / 180);
     if (ball.x <= 0) { ball.direction = 360 - ball.direction; }
     if (ball.x + ball.width >= window.innerWidth / window.devicePixelRatio) { ball.direction = 360 - ball.direction; }
     if (ball.y <= 0) { ball.direction = 180 - ball.direction; }
     if (ball.y + ball.height >= window.innerHeight / window.devicePixelRatio) { ball.direction = 180 - ball.direction; }
 
-    let hit = false
+    let hit = testPadCollision(ball, playerPad)
     bricks.map((rows) => {
         rows.map((brick) => {
             if (!hit){
@@ -74,6 +68,9 @@ app.ticker.add((delta) => {
 let bricks = addBricks(4, 7);
 let lives = addLives(maxLives);
 updateTintLives();
+let playerPad = addPlayerPad();
+window.addEventListener('keydown', handleKeyboardEvent);
+window.addEventListener('keyup', handleKeyboardEvent);
 
 function addBricks(rowCount, columnCount) {
     let graphics = new Graphics();
@@ -172,6 +169,32 @@ function testCollision(ball, brick, rowCount){
     return false;
 }
 
+function testPadCollision(ball, pad){
+    const centerDistanceX = Math.abs(ball.x + ball.width / 2 - (pad.x + pad.width / 2));
+    const centerDistanceY = Math.abs(ball.y + ball.height / 2 - (pad.y + pad.height / 2));
+  
+    if (centerDistanceX > ((pad.width + ball.width) / 2)) { return false; }
+    if (centerDistanceY > ((pad.height + ball.height) / 2)) { return false; }
+
+    if (centerDistanceX <= pad.width) { // hit from top/bottom
+        ball.direction = 180 - ball.direction;
+        return true;
+    }
+    if (centerDistanceY <= pad.height) { // hit from side
+        ball.direction = 360 - ball.direction;
+        return true;
+    }
+
+    const cornerDistance_sq = Math.pow(centerDistanceX - pad.width/2, 2) + Math.pow(centerDistanceY - pad.height/2, 2) 
+    if (cornerDistance_sq <= Math.pow(ball.width / 2, 2)){ // hit the corner
+        ball.direction = 180 - ball.direction;
+        return true;
+    }
+
+    return false;
+}
+
+
 
 function updateTintLives(){
     for (let livesIdx = 0; livesIdx < lives.length; livesIdx++) {
@@ -197,5 +220,47 @@ function reduceBrickDensity(brick, rowCount){
         updateTintByDensity(brick, rowCount);
     } else {
         brick.alpha = 0;
+    }
+}
+
+
+function addPlayerPad(){
+    let graphics = new Graphics();
+    graphics.lineStyle(2, parseInt(accentColor.substring(1), 16), 1);
+    graphics.beginFill(parseInt(accentColor2.substring(1), 16));
+    graphics.drawRect(0, 0, window.innerWidth / window.devicePixelRatio / 8, 20 * zoomFactor);
+    graphics.endFill();
+
+    let texture = app.renderer.generateTexture(graphics);
+    let sp = new Sprite(texture);
+             
+    sp.x = (window.innerWidth / window.devicePixelRatio - graphics.width) / 2;
+    sp.y = window.innerHeight / window.devicePixelRatio - 25 * zoomFactor;
+    sp.speed = 0;
+
+    app.stage.addChild(sp);
+    app.ticker.add((delta) => {        
+        sp.x = Math.min(
+            window.innerWidth / window.devicePixelRatio - sp.width, 
+            Math.max(
+                0, 
+                sp.x + delta * sp.speed)
+        );   
+    });
+
+    return sp;
+}
+
+function handleKeyboardEvent(e){    
+    if (e.type === 'keydown' && e.key === 'ArrowLeft'){        
+        playerPad.speed = -5;
+    } else if (e.type === 'keyup' && e.key === 'ArrowLeft'){
+        playerPad.speed = 0;
+    } else if (e.type === 'keydown' && e.key === 'ArrowRight'){
+        playerPad.speed = 5;
+    } else if (e.type === 'keyup' && e.key === 'ArrowRight'){
+        playerPad.speed = 0;
+    } else {
+        // ignore
     }
 }
