@@ -90,7 +90,7 @@ function addBricks(rowCount, columnCount) {
              
             sp.x = columnCount / 2 + colIdx * (graphics.width + 1);
             sp.y = 60 * zoomFactor + rowIdx * (graphics.height + 2);
-            sp.density = rowCount - rowIdx;
+            sp.density = 1; // rowCount - rowIdx;
             updateTintByDensity(sp, rowCount);
             
             bricks[rowIdx][colIdx] = sp;
@@ -253,11 +253,11 @@ function addPlayerPad(){
 
 function handleKeyboardEvent(e){    
     if (e.type === 'keydown' && e.key === 'ArrowLeft'){        
-        playerPad.speed = -5;
+        playerPad.speed = -10;
     } else if (e.type === 'keyup' && e.key === 'ArrowLeft'){
         playerPad.speed = 0;
     } else if (e.type === 'keydown' && e.key === 'ArrowRight'){
-        playerPad.speed = 5;
+        playerPad.speed = 10;
     } else if (e.type === 'keyup' && e.key === 'ArrowRight'){
         playerPad.speed = 0;
     } else {
