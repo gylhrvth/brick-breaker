@@ -27,21 +27,16 @@ module.exports = {
         ],
     },
     plugins: [
+        new HTMLWebpackPlugin(
+            {
+                title: 'Brick breaker'
+            }
+        ),
         new CopyWebpackPlugin({
                 patterns: [
                     { to: 'assets', from: 'assets' }
                 ]
             }
-        ),
-        new HTMLWebpackPlugin(
-            /*
-            {
-            template: 'build/index.html',
-            filename: 'index.html',
-            hash: true,
-            minify: false
-            }
-            */
         )
     ]
 }

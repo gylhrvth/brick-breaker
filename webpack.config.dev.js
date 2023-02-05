@@ -21,18 +21,15 @@ module.exports = {
       },
     devtool: 'inline-source-map',
     plugins: [
+        new HTMLWebpackPlugin(
+            {
+                title: 'Brick breaker'
+            }
+        ),
         new CopyWebpackPlugin({
             patterns: [
                 { to: 'assets', from: 'assets' }
             ]
-        }),
-        new HTMLWebpackPlugin(
-            /*
-            {
-                template: 'build/index.html',
-                filename: 'index.html'
-            }
-            */
-        )
+        })
     ]
 }

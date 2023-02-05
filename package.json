@@ -33,6 +33,7 @@
     "@pixi/runner": "^7.1.1",
     "@pixi/settings": "^7.1.1",
     "@pixi/sprite": "^7.1.1",
+    "@pixi/text": "^7.1.2",
     "@pixi/ticker": "^7.1.1",
     "@pixi/utils": "^7.1.1",
     "babel-loader": "^9.1.2",
@@ -44,7 +45,7 @@
   },
   "devDependencies": {
     "css-loader": "^6.7.3",
-    "style-loader": "^3.3.1",
-    "gh-pages": "^5.0.0"
+    "gh-pages": "^5.0.0",
+    "style-loader": "^3.3.1"
   }
 }

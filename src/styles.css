@@ -1,3 +1,9 @@
+@font-face {
+    font-family: Allegra;
+    src: url(/assets/fonts/Allegra-Semibold.ttf);
+}
+
+
 body {
     margin: 0;
     overflow: hidden;

@@ -16,21 +16,31 @@ export function addBall(state){
     sp.direction = getRandomPlusMinus() * (20 + getRandomInt(15));
     state.app.stage.addChild(sp);
     state.app.ticker.add((delta) => {
-        sp.x += delta * sp.speed * Math.sin(Math.PI * (180 - sp.direction) / 180);
-        sp.y += delta * sp.speed * Math.cos(Math.PI * (180 - sp.direction) / 180);
-        if (sp.x <= 0) { sp.direction = normalizeDirection(360 - sp.direction); }
-        if (sp.x + sp.width >= window.innerWidth / window.devicePixelRatio) { sp.direction = normalizeDirection(360 - sp.direction); }
-        if (sp.y <= 0) { sp.direction = normalizeDirection(180 - sp.direction); }
-        if (sp.y + sp.height >= window.innerHeight / window.devicePixelRatio) { sp.direction = normalizeDirection(180 - sp.direction); }
-
-        let hit = testPadCollision(sp, state.playerPad)
-        state.bricks.map((rows) => {
-            rows.map((brick) => {
-                if (!hit){
-                    hit = testBrickCollision(sp, brick, state.bricks.length)
-                }
-            })
-        })
+        if (state.progress === 'in game'){
+            sp.x += delta * sp.speed * Math.sin(Math.PI * (180 - sp.direction) / 180);
+            sp.y += delta * sp.speed * Math.cos(Math.PI * (180 - sp.direction) / 180);
+            if (sp.x <= 0) { sp.direction = normalizeDirection(360 - sp.direction); }
+            if (sp.x + sp.width >= window.innerWidth / window.devicePixelRatio) { sp.direction = normalizeDirection(360 - sp.direction); }
+            if (sp.y <= 0) { sp.direction = normalizeDirection(180 - sp.direction); }
+            if (sp.y + sp.height >= window.innerHeight / window.devicePixelRatio) {
+                state.progress = 'recover';
+                //sp.direction = normalizeDirection(180 - sp.direction); 
+            }
+    
+            let hit = testPadCollision(sp, state.playerPad)
+            state.bricks.map((rows) => {
+                rows.map((brick) => {
+                    if (!hit){
+                        hit = testBrickCollision(state, sp, brick)
+                    }
+                })
+            })    
+        } else if (state.progress === 'ball recovery') {
+            sp.x = window.innerWidth / window.devicePixelRatio / 2 - sp.radius;
+            sp.y = window.innerHeight / window.devicePixelRatio - 5 * sp.radius;
+            sp.direction = getRandomPlusMinus() * (20 + getRandomInt(15));
+            state.progress = 'in game';
+        }
     });
     return sp;
 }
