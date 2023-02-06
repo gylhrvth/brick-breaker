@@ -175,6 +175,8 @@ function handleKeyboardEvent(e){
     } else if (state.progress === 'recover') {
         if (e.type === 'keyup'){
             state.progress = 'ball recovery'
+            state.keyboard.left = false;
+            state.keyboard.right = false;
             addTextMessage('');
         }
     }

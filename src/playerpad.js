@@ -1,3 +1,4 @@
+import { defaultFilterVertex } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Sprite } from "@pixi/sprite";
 
@@ -32,33 +33,31 @@ export function addPlayerPad(state){
 
 
 export function testPadCollision(ball, pad){
-    const centerDistanceX = Math.abs(ball.x + ball.width / 2 - (pad.x + pad.width / 2));
-    const centerDistanceY = Math.abs(ball.y + ball.height / 2 - (pad.y + pad.height / 2));
-  
-    if (centerDistanceX > ((pad.width + ball.width) / 2)) { return false; }
-    if (centerDistanceY > ((pad.height + ball.height) / 2)) { return false; }
-    
-    if (centerDistanceX <= pad.width) { // hit from top/bottom
-        if ((ball.direction > 90) && (ball.direction < 270)){
-            ball.direction = normalizeDirection(180 - ball.direction);
-        }
-        return true;
-    }
-    if (centerDistanceY <= pad.height) { // hit from side
-        if ((ball.direction > 90) && (ball.direction < 270)){
+    let testX = ball.x;
+    let testY = ball.y;
+
+    if (ball.x < pad.x) { testX = pad.x; }
+    else if (ball.x > pad.x + pad.width) { testX = pad.x + pad.width; }
+    if (ball.y < pad.y) { testY = pad.y; }
+    else if (ball.y > pad.y + pad.height) { testY = pad.y + pad.height; }
+
+    let distX = ball.x - testX;
+    let distY = ball.y - testY;
+
+    if (distX * distX + distY * distY <= ball.width * ball.width){
+        if (testX == ball.x) {
+            ball.y = (ball.y < pad.y) ? pad.y - ball.height : pad.y + pad.height; 
+            ball.direction = normalizeDirection(180 - ball.direction);    
+        } else if (testY == ball.y) {
+            ball.x = (ball.x < pad.x ) ? pad.x - ball.width : pad.x + pad.width;
             ball.direction = normalizeDirection(360 - ball.direction);
+        } else {
+            ball.y = (ball.y < pad.y) ? pad.y - ball.height : pad.y + pad.height; 
+            ball.x = (ball.x < pad.x ) ? pad.x - ball.width : pad.x + pad.width;
+            ball.direction = normalizeDirection(180 + ball.direction);
         }
         return true;
     }
-
-    const cornerDistance_sq = Math.pow(centerDistanceX - pad.width/2, 2) + Math.pow(centerDistanceY - pad.height/2, 2) 
-    if (cornerDistance_sq <= Math.pow(ball.width / 2, 2)){ // hit the corner
-        if ((ball.direction > 90) && (ball.direction < 270)){
-            ball.direction = normalizeDirection(180 - ball.direction);
-        }
-        return true;
-    }
-
     return false;
 }
 

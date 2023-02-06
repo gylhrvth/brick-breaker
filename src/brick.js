@@ -29,7 +29,7 @@ export function addBricks(state, rowCount, columnCount) {
     }
     return bricks;
 }
-
+/*
 function addLeadingZeros(n, digits) {
     return '0'.repeat(digits - n.toString().length).concat(n.toString());
 }
@@ -43,37 +43,38 @@ function getFormatedTimeStamp(ball, brick){
         ' ball: ' + (ball.x + ball.width / 2).toFixed(1) + ':' + (ball.y + ball.height / 2).toFixed(1) + " /" + (ball.width/2).toFixed(1) +
         ' brick: ' + brick.x.toFixed(1) + ':' + brick.y.toFixed(1) + ':' + brick.width.toFixed(1) + ':' + brick.height.toFixed(1); 
  }
-
+*/
 export function testBrickCollision(state, ball, brick){
     if (brick.density <= 0) return;
 
-    const centerDistanceX = Math.abs(ball.x + ball.width / 2 - (brick.x + brick.width / 2));
-    const centerDistanceY = Math.abs(ball.y + ball.height / 2 - (brick.y + brick.height / 2));
-  
-    if (centerDistanceX > ((brick.width + ball.width) / 2)) { return false; }
-    if (centerDistanceY > ((brick.height + ball.height) / 2)) { return false; }
+    let testX = ball.x;
+    let testY = ball.y;
 
-    if (centerDistanceX <= brick.width) { // hit from top/bottom
-        console.log('hit bottom', getFormatedTimeStamp(ball, brick)); 
-        ball.direction = normalizeDirection(180 - ball.direction);
-        reduceBrickDensity(state, brick);
+    if (ball.x < brick.x) { testX = brick.x; }
+    else if (ball.x > brick.x + brick.width) { testX = brick.x + brick.width; }
+    if (ball.y < brick.y) { testY = brick.y; }
+    else if (ball.y > brick.y + brick.height) { testY = brick.y + brick.height; }
+
+    let distX = ball.x - testX;
+    let distY = ball.y - testY;
+
+    if (distX * distX + distY * distY <= ball.width * ball.width){
+        if (testX == ball.x) {
+            ball.y = (ball.y < brick.y) ? brick.y - ball.height : brick.y + brick.height; 
+            ball.direction = normalizeDirection(180 - ball.direction);
+            reduceBrickDensity(state, brick);   
+        } else if (testY == ball.y) {
+            ball.x = (ball.x < brick.x ) ? brick.x - ball.width : brick.x + brick.width;
+            ball.direction = normalizeDirection(360 - ball.direction);
+            reduceBrickDensity(state, brick);
+        } else {
+            ball.y = (ball.y < brick.y) ? brick.y - ball.height : brick.y + brick.height; 
+            ball.x = (ball.x < brick.x ) ? brick.x - ball.width : brick.x + brick.width;
+            ball.direction = normalizeDirection(180 + ball.direction);
+            reduceBrickDensity(state, brick);
+        }
         return true;
     }
-    if (centerDistanceY <= brick.height) { // hit from side
-        console.log('hit   side', getFormatedTimeStamp(ball, brick)); 
-        ball.direction = normalizeDirection(360 - ball.direction);
-        reduceBrickDensity(state, brick);
-        return true;
-    }
-
-    const cornerDistance_sq = Math.pow(centerDistanceX - brick.width/2, 2) + Math.pow(centerDistanceY - brick.height/2, 2) 
-    if (cornerDistance_sq <= Math.pow(ball.width / 2, 2)){ // hit the corner
-        console.log('hit corner', getFormatedTimeStamp(ball, brick )); 
-        ball.direction = normalizeDirection(360 - ball.direction);
-        reduceBrickDensity(state, brick);
-        return true;
-    }
-
     return false;
 }
 

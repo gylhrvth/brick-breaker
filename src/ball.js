@@ -12,16 +12,29 @@ export function addBall(state){
     sp.height = 2 * sp.radius;
     sp.x = window.innerWidth / window.devicePixelRatio / 2 - sp.radius;
     sp.y = window.innerHeight / window.devicePixelRatio - 5 * sp.radius;
-    sp.speed = 6 * state.zoomFactor;
+    sp.defaultSpeed = 6 * state.zoomFactor;
+    sp.speed = sp.defaultSpeed;
     sp.direction = getRandomPlusMinus() * (20 + getRandomInt(15));
     state.app.stage.addChild(sp);
     state.app.ticker.add((delta) => {
         if (state.progress === 'in game'){
             sp.x += delta * sp.speed * Math.sin(Math.PI * (180 - sp.direction) / 180);
             sp.y += delta * sp.speed * Math.cos(Math.PI * (180 - sp.direction) / 180);
-            if (sp.x <= 0) { sp.direction = normalizeDirection(360 - sp.direction); }
-            if (sp.x + sp.width >= window.innerWidth / window.devicePixelRatio) { sp.direction = normalizeDirection(360 - sp.direction); }
-            if (sp.y <= 0) { sp.direction = normalizeDirection(180 - sp.direction); }
+            if (sp.speed > sp.defaultSpeed) {
+                sp.speed = Math.max(sp.defaultSpeed, 0.95 * sp.speed);
+            }
+            if (sp.x <= 0) { 
+                sp.x = 0;
+                sp.direction = normalizeDirection(360 - sp.direction);
+            }
+            if (sp.x + sp.width >= window.innerWidth / window.devicePixelRatio) {
+                sp.x = window.innerWidth / window.devicePixelRatio - sp.width;
+                sp.direction = normalizeDirection(360 - sp.direction); 
+            }
+            if (sp.y <= 0) { 
+                sp.y = 0;
+                sp.direction = normalizeDirection(180 - sp.direction); 
+            }
             if (sp.y + sp.height >= window.innerHeight / window.devicePixelRatio) {
                 state.progress = 'recover';
                 //sp.direction = normalizeDirection(180 - sp.direction); 
@@ -37,7 +50,7 @@ export function addBall(state){
             })    
         } else if (state.progress === 'ball recovery') {
             sp.x = window.innerWidth / window.devicePixelRatio / 2 - sp.radius;
-            sp.y = window.innerHeight / window.devicePixelRatio - 5 * sp.radius;
+            sp.y = window.innerHeight / window.devicePixelRatio - 25 * sp.radius;
             sp.direction = getRandomPlusMinus() * (20 + getRandomInt(15));
             state.progress = 'in game';
         }
