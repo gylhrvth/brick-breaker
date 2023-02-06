@@ -13,6 +13,7 @@ import { hslToHex, hslToHexNumeric, hslTextToHexNumeric } from './tools';
 
 
 let state = {};
+state.keyboard = {};
 state.primaryColor = hslToHex(203, 100, 20);
 state.secondaryColor = hslToHex(9, 79, 54);
 state.secondaryShadowColor = hslToHex(9, 79, 45);
@@ -152,14 +153,18 @@ function startCountDown(){
 
 function handleKeyboardEvent(e){
     if (state.progress === 'in game'){
-        if (e.type === 'keydown' && e.key === 'ArrowLeft'){        
+        if (e.type === 'keydown' && e.key === 'ArrowLeft'){
+            state.keyboard.left = true;
             state.playerPad.speed = -10 * state.zoomFactor;
         } else if (e.type === 'keyup' && e.key === 'ArrowLeft'){
-            state.playerPad.speed = 0;
+            state.keyboard.left = false;
+            state.playerPad.speed = state.keyboard.right? 10 * state.zoomFactor : 0;
         } else if (e.type === 'keydown' && e.key === 'ArrowRight'){
+            state.keyboard.right = true;
             state.playerPad.speed = 10 * state.zoomFactor;
         } else if (e.type === 'keyup' && e.key === 'ArrowRight'){
-            state.playerPad.speed = 0;
+            state.keyboard.right = false;
+            state.playerPad.speed = state.keyboard.left? -10 * state.zoomFactor : 0;
         } else {
             // ignore
         }    
