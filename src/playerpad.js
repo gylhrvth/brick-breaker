@@ -31,6 +31,12 @@ export function addPlayerPad(state){
     return sp;
 }
 
+export function resetPadPosition(state) {
+    state.playerPad.x = (window.innerWidth / window.devicePixelRatio - state.playerPad.width) / 2;
+    state.playerPad.y = window.innerHeight / window.devicePixelRatio - 25 * state.zoomFactor;
+    state.playerPad.speed = 0;
+}
+
 
 export function testPadCollision(ball, pad){
     let testX = ball.x;

@@ -20,8 +20,9 @@ state.secondaryShadowColor = hslToHex(9, 79, 45);
 state.accentColor = hslToHex(171, 64, 65);
 state.accentColor2 = hslToHex(171, 64, 56);
 
-state.maxLives = 3;
-state.currentLives = state.maxLives - 1;
+state.maxLives = 4;
+state.currentLives = 1;
+state.readyToWin = false;
 state.progress = 'press any key to start';
 
 state.zoomFactor =  window.innerHeight / window.devicePixelRatio / 600;
@@ -51,7 +52,7 @@ function initApplication() {
     state.app.stage.addChild(sprite);
 
 
-    state.bricks = addBricks(state, 4, 7);
+    state.bricks = addBricks(state, state.maxLives, 7);
     state.lives = addLives(state.maxLives);
     updateTintLives();
     state.playerPad = addPlayerPad(state);
@@ -77,7 +78,7 @@ function initApplication() {
 }
 
 
-function addTextMessage(message){
+export function addTextMessage(message){
     state.textField.text = message;
 
     state.textField.x = window.innerWidth / window.devicePixelRatio / 2 - state.textField.width / 2;
@@ -113,7 +114,7 @@ function addLives(count){
 }
 
 
-function updateTintLives(){
+export function updateTintLives(){
     for (let livesIdx = 0; livesIdx < state.lives.length; livesIdx++) {
         let heart = state.lives[livesIdx];
 
@@ -178,6 +179,12 @@ function handleKeyboardEvent(e){
             state.keyboard.left = false;
             state.keyboard.right = false;
             addTextMessage('');
+        }
+    } else if (state.progress === 'win') {
+        if (e.type === 'keydown'){
+            state.readyToWin = true;
+        } else if (e.type === 'keyup' && state.readyToWin){
+            window.location = 'https://digitalcampusvorarlberg.at/'
         }
     }
 }

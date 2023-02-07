@@ -2,7 +2,7 @@ import { Sprite } from "@pixi/sprite";
 
 import { getRandomPlusMinus, getRandomInt, normalizeDirection} from "./tools";
 import { testBrickCollision } from "./brick";
-import { testPadCollision } from "./playerpad";
+import { resetPadPosition, testPadCollision } from "./playerpad";
 
 export function addBall(state){
     // Create the sprite and add it to the stage
@@ -52,7 +52,10 @@ export function addBall(state){
             sp.x = window.innerWidth / window.devicePixelRatio / 2 - sp.radius;
             sp.y = window.innerHeight / window.devicePixelRatio - 25 * sp.radius;
             sp.direction = getRandomPlusMinus() * (20 + getRandomInt(15));
+            resetPadPosition(state);
             state.progress = 'in game';
+        } else if (state.progress == 'win') {
+            sp.alpha = 0;
         }
     });
     return sp;

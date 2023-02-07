@@ -2,6 +2,7 @@ import { Graphics } from "@pixi/graphics";
 import { Sprite } from "@pixi/sprite";
 
 import { hslTextToHexNumeric, normalizeDirection } from "./tools";
+import { updateTintLives, addTextMessage} from "./index";
 
 export function addBricks(state, rowCount, columnCount) {
     let graphics = new Graphics();
@@ -70,7 +71,8 @@ export function testBrickCollision(state, ball, brick){
         } else {
             ball.y = (ball.y < brick.y) ? brick.y - ball.height : brick.y + brick.height; 
             ball.x = (ball.x < brick.x ) ? brick.x - ball.width : brick.x + brick.width;
-            ball.direction = normalizeDirection(180 + ball.direction);
+            // Handle bounce as it'd hit from bottom
+            ball.direction = normalizeDirection(180 - ball.direction);
             reduceBrickDensity(state, brick);
         }
         return true;
@@ -85,5 +87,27 @@ function reduceBrickDensity(state, brick){
         // do nothing
     } else {
         brick.alpha = 0;
+    }
+
+    let countClearedLines = 0;
+    for (const rows of state.bricks) {
+        let remainingBricks = rows.reduce(
+            (count, br) => {
+                if (br.density > 0) { return count + 1;}
+                else { return count;}
+            }, 
+            0
+        );
+        if (remainingBricks == 0) { 
+            ++countClearedLines;
+        }
+    }
+    if (countClearedLines < state.maxLives){
+        state.currentLives = 1 + countClearedLines;
+        updateTintLives()
+    } else {
+        // the table has been cleared...
+        state.progress = "win";
+        addTextMessage("Congratulation!\nPress any key to gather your gift");
     }
 }
