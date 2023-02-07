@@ -184,7 +184,7 @@ function handleKeyboardEvent(e){
         if (e.type === 'keydown'){
             state.readyToWin = true;
         } else if (e.type === 'keyup' && state.readyToWin){
-            window.location = 'https://digitalcampusvorarlberg.at/'
+            window.location = 'https://site.digitalcampusvorarlberg.at/esports-cup'
         }
     }
 }
