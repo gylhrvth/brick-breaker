@@ -39,28 +39,35 @@ export function resetPadPosition(state) {
 
 
 export function testPadCollision(ball, pad){
-    let testX = ball.x;
-    let testY = ball.y;
+    let ballCenter = {
+        x: ball.x + ball.width / 2,
+        y: ball.y + ball.height / 2
+    }
 
-    if (ball.x < pad.x) { testX = pad.x; }
-    else if (ball.x > pad.x + pad.width) { testX = pad.x + pad.width; }
-    if (ball.y < pad.y) { testY = pad.y; }
-    else if (ball.y > pad.y + pad.height) { testY = pad.y + pad.height; }
+    let testX = ballCenter.x;
+    let testY = ballCenter.y;
 
-    let distX = ball.x - testX;
-    let distY = ball.y - testY;
+    if (ballCenter.x < pad.x) { testX = pad.x; }
+    else if (ballCenter.x > pad.x + pad.width) { testX = pad.x + pad.width; }
+    if (ballCenter.y < pad.y) { testY = pad.y; }
+    else if (ballCenter.y > pad.y + pad.height) { testY = pad.y + pad.height; }
 
-    if (distX * distX + distY * distY <= ball.width * ball.width){
-        if (testX == ball.x) {
-            ball.y = (ball.y < pad.y) ? pad.y - ball.height : pad.y + pad.height; 
+    let distX = ballCenter.x - testX;
+    let distY = ballCenter.y - testY;
+
+    if (distX * distX + distY * distY <= ball.radius * ball.radius){
+        console.log('hit', ball.x, ball.y)
+        if (testX == ballCenter.x) {
+            ball.y = (ballCenter.y < pad.y) ? pad.y - ball.height : pad.y + pad.height; 
             ball.direction = normalizeDirection(180 - ball.direction);    
-        } else if (testY == ball.y) {
-            ball.x = (ball.x < pad.x ) ? pad.x - ball.width : pad.x + pad.width;
+        } else if (testY == ballCenter.y) {
+            ball.x = (ballCenter.x < pad.x ) ? pad.x - ball.width : pad.x + pad.width;
             ball.direction = normalizeDirection(360 - ball.direction);
         } else {
-            ball.y = (ball.y < pad.y) ? pad.y - ball.height : pad.y + pad.height; 
-            ball.x = (ball.x < pad.x ) ? pad.x - ball.width : pad.x + pad.width;
             ball.direction = normalizeDirection(180 + ball.direction);
+            ball.x = testX + ball.radius * Math.sin(Math.PI * (180 - ball.direction) / 180);
+            ball.y = testY + ball.radius * Math.cos(Math.PI * (180 - ball.direction) / 180)
+
         }
         return true;
     }

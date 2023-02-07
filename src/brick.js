@@ -48,31 +48,36 @@ function getFormatedTimeStamp(ball, brick){
 export function testBrickCollision(state, ball, brick){
     if (brick.density <= 0) return;
 
-    let testX = ball.x;
-    let testY = ball.y;
+    let ballCenter = {
+        x: ball.x + ball.width / 2,
+        y: ball.y + ball.height / 2
+    }
 
-    if (ball.x < brick.x) { testX = brick.x; }
-    else if (ball.x > brick.x + brick.width) { testX = brick.x + brick.width; }
-    if (ball.y < brick.y) { testY = brick.y; }
-    else if (ball.y > brick.y + brick.height) { testY = brick.y + brick.height; }
+    let testX = ballCenter.x;
+    let testY = ballCenter.y;
 
-    let distX = ball.x - testX;
-    let distY = ball.y - testY;
+    if (ballCenter.x < brick.x) { testX = brick.x; }
+    else if (ballCenter.x > brick.x + brick.width) { testX = brick.x + brick.width; }
+    if (ballCenter.y < brick.y) { testY = brick.y; }
+    else if (ballCenter.y > brick.y + brick.height) { testY = brick.y + brick.height; }
 
-    if (distX * distX + distY * distY <= ball.width * ball.width){
-        if (testX == ball.x) {
-            ball.y = (ball.y < brick.y) ? brick.y - ball.height : brick.y + brick.height; 
+    let distX = ballCenter.x - testX;
+    let distY = ballCenter.y - testY;
+
+    if (distX * distX + distY * distY <= ball.radius * ball.radius){
+        if (testX == ballCenter.x) {
+            ball.y = (ballCenter.y < brick.y) ? brick.y - ball.height : brick.y + brick.height; 
             ball.direction = normalizeDirection(180 - ball.direction);
             reduceBrickDensity(state, brick);   
-        } else if (testY == ball.y) {
-            ball.x = (ball.x < brick.x ) ? brick.x - ball.width : brick.x + brick.width;
+        } else if (testY == ballCenter.y) {
+            ball.x = (ballCenter.x < brick.x ) ? brick.x - ball.width : brick.x + brick.width;
             ball.direction = normalizeDirection(360 - ball.direction);
             reduceBrickDensity(state, brick);
         } else {
-            ball.y = (ball.y < brick.y) ? brick.y - ball.height : brick.y + brick.height; 
-            ball.x = (ball.x < brick.x ) ? brick.x - ball.width : brick.x + brick.width;
-            // Handle bounce as it'd hit from bottom
-            ball.direction = normalizeDirection(180 - ball.direction);
+            ball.direction = normalizeDirection(180 + ball.direction);
+            console.log('corner hit', brick.x, brick.y, brick.width, brick.height, testX, testY);
+            ball.x = testX + ball.radius * Math.sin(Math.PI * (180 - ball.direction) / 180);
+            ball.y = testY + ball.radius * Math.cos(Math.PI * (180 - ball.direction) / 180)
             reduceBrickDensity(state, brick);
         }
         return true;
