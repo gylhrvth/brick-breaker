@@ -56,7 +56,6 @@ export function testPadCollision(ball, pad){
     let distY = ballCenter.y - testY;
 
     if (distX * distX + distY * distY <= ball.radius * ball.radius){
-        console.log('hit', ball.x, ball.y)
         if (testX == ballCenter.x) {
             ball.y = (ballCenter.y < pad.y) ? pad.y - ball.height : pad.y + pad.height; 
             ball.direction = normalizeDirection(180 - ball.direction);    

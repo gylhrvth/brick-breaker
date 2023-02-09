@@ -75,7 +75,6 @@ export function testBrickCollision(state, ball, brick){
             reduceBrickDensity(state, brick);
         } else {
             ball.direction = normalizeDirection(180 + ball.direction);
-            console.log('corner hit', brick.x, brick.y, brick.width, brick.height, testX, testY);
             ball.x = testX + ball.radius * Math.sin(Math.PI * (180 - ball.direction) / 180);
             ball.y = testY + ball.radius * Math.cos(Math.PI * (180 - ball.direction) / 180)
             reduceBrickDensity(state, brick);
@@ -113,6 +112,13 @@ function reduceBrickDensity(state, brick){
     } else {
         // the table has been cleared...
         state.progress = "win";
+        state.time.finish = Date.now();
         addTextMessage("Congratulation!\nPress any key to gather your gift");
+        addTextMessage(
+            "You've cleaned the field in " + (state.time.finish - state.time.start) / 1000 + " secnonds.",
+            state.textFieldSecondary, 
+            24, 
+            window.innerHeight / window.devicePixelRatio - 48 * state.zoomFactor
+        );
     }
 }

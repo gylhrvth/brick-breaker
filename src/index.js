@@ -14,6 +14,7 @@ import { hslToHex, hslToHexNumeric, hslTextToHexNumeric } from './tools';
 
 let state = {};
 state.keyboard = {};
+state.time = {};
 state.primaryColor = hslToHex(203, 100, 20);
 state.secondaryColor = hslToHex(9, 79, 54);
 state.secondaryShadowColor = hslToHex(9, 79, 45);
@@ -26,7 +27,6 @@ state.readyToWin = false;
 state.progress = 'press any key to start';
 
 state.zoomFactor =  window.innerHeight / window.devicePixelRatio / 600;
-console.log('zoom: ', state.zoomFactor)
 
 initApplication();
 
@@ -71,25 +71,32 @@ function initApplication() {
     state.textField = textField;
     state.app.stage.addChild(textField);
 
+    state.textFieldSecondary = new Text('', {
+        fontFamily: 'Allegra',
+        fontSize: 64 * state.zoomFactor,
+        fill: hslTextToHexNumeric(state.accentColor),
+        align: 'center',
+    });
+    state.app.stage.addChild(state.textFieldSecondary);
     addTextMessage('Press any key to start!');
  
     window.addEventListener('keydown', handleKeyboardEvent);
     window.addEventListener('keyup', handleKeyboardEvent);
 }
 
+    
+export function addTextMessage(message, tf = state.textField, size = 64, posCenterY = window.innerHeight / window.devicePixelRatio / 2){
+    tf.text = message;
+    tf.style.fontSize = size * state.zoomFactor;
 
-export function addTextMessage(message){
-    state.textField.text = message;
-
-    state.textField.x = window.innerWidth / window.devicePixelRatio / 2 - state.textField.width / 2;
-    state.textField.y = window.innerHeight / window.devicePixelRatio / 2 - state.textField.height / 2;
-    state.textField.style.fontSize = 64 * state.zoomFactor;
+    tf.x = window.innerWidth / window.devicePixelRatio / 2 - tf.width / 2;
+    tf.y = posCenterY - tf.height / 2;
     // Reduce font size if necessary
-    if (state.textField.width > 0.9 * window.innerWidth / window.devicePixelRatio){
-        state.textField.style.fontSize = state.textField.style.fontSize *
-            (0.9 * window.innerWidth / window.devicePixelRatio / state.textField.width);
-        state.textField.x = window.innerWidth / window.devicePixelRatio / 2 - state.textField.width / 2;
-        state.textField.y = window.innerHeight / window.devicePixelRatio / 2 - state.textField.height / 2;
+    if (tf.width > 0.9 * window.innerWidth / window.devicePixelRatio){
+        tf.style.fontSize = tf.style.fontSize *
+            (0.9 * window.innerWidth / window.devicePixelRatio / tf.width);
+        tf.x = window.innerWidth / window.devicePixelRatio / 2 - tf.width / 2;
+        tf.y = window.innerHeight / window.devicePixelRatio / 2 - tf.height / 2;
     }
 
 }
@@ -142,6 +149,7 @@ function startCountDown(){
             } else {
                 state.progress = 'in game'
                 addTextMessage('');
+                state.time.start = Date.now();
                 clearInterval(intervall);
             }
             --counter;
@@ -171,7 +179,7 @@ function handleKeyboardEvent(e){
         }    
     } else if (state.progress === 'press any key to start') {
         if (e.type === 'keyup'){
-            startCountDown();
+            startCountDown();    
         }
     } else if (state.progress === 'recover') {
         if (e.type === 'keyup'){
