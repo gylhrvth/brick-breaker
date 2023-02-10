@@ -115,7 +115,7 @@ function reduceBrickDensity(state, brick){
         state.time.finish = Date.now();
         addTextMessage("Congratulation!\nPress any key to gather your gift");
         addTextMessage(
-            "You've cleaned the field in " + (state.time.finish - state.time.start) / 1000 + " secnonds.",
+            "You've cleaned the field in " + (state.time.finish - state.time.start) / 1000 + " seconds.",
             state.textFieldSecondary, 
             24, 
             window.innerHeight / window.devicePixelRatio - 48 * state.zoomFactor
