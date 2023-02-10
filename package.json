@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "predeploy": "npm run production",
-    "deploy": "echo spiel.digitalcampusvorarlberg.at > ./build/CNAME && gh-pages -d dist",
+    "deploy": "echo spiel.digitalcampusvorarlberg.at > ./dist/CNAME && gh-pages -d dist",
     "start": "webpack-dev-server --config webpack.config.dev.js",
     "build": "webpack --mode development --config webpack.config.dev.js",
     "production": "webpack --mode production --config webpack.config.prod.js"
